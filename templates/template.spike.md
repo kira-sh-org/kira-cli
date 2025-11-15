@@ -12,21 +12,15 @@ tags: <!--input-strings[research,discovery,investigation]:tags:"Tags"-->
 # <!--input-string:title:"Spike title"-->
 
 ## Objective
-<!--input-string:objective:"What are we trying to understand?"-->
 
 ## Questions to Answer
-- <!--input-string:question1:"First question"-->
-- <!--input-string:question2:"Second question"-->
 
 ## Approach
-<!--input-string:approach:"How will we investigate?"-->
 
 ## Findings
-<!--input-string:findings:"What did we discover?"-->
 
 ## Recommendations
-<!--input-string:recommendations:"What should we do next?"-->
 
 ## Release Notes
-<!--input-string:release_notes:"Public-facing changes (optional)"-->
+
 

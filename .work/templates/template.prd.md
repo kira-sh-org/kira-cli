@@ -13,17 +13,12 @@ tags: <!--input-strings[frontend,backend,database,api,ui,security]:tags:"Tags"--
 # <!--input-string:title:"Feature title"-->
 
 ## Context
-<!--input-string:context:"Background and rationale"-->
 
 ## Requirements
-<!--input-string:requirements:"Functional requirements"-->
 
 ## Acceptance Criteria
-- [ ] <!--input-string:criteria1:"First acceptance criterion"-->
-- [ ] <!--input-string:criteria2:"Second acceptance criterion"-->
 
 ## Implementation Notes
-<!--input-string:implementation:"Technical implementation details"-->
 
 ## Release Notes
-<!--input-string:release_notes:"Public-facing changes (optional)"-->
+
