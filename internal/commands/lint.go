@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 	"kira/internal/config"
 	"kira/internal/validation"
 )
@@ -43,4 +44,3 @@ func lintWorkItems(cfg *config.Config) error {
 	fmt.Println("No issues found. All work items are valid.")
 	return nil
 }
-

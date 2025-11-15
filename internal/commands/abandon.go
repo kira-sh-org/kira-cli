@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+
 	"kira/internal/config"
 )
 
@@ -118,9 +119,6 @@ func isWorkItemID(target string) bool {
 	return len(target) == 3 && target[0] >= '0' && target[0] <= '9'
 }
 
-
-
-
 func addAbandonmentReason(filePath, reason string) error {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
@@ -133,4 +131,3 @@ func addAbandonmentReason(filePath, reason string) error {
 
 	return os.WriteFile(filePath, []byte(newContent), 0644)
 }
-

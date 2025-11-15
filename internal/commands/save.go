@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+
 	"kira/internal/config"
 	"kira/internal/validation"
 )
@@ -90,28 +91,28 @@ func saveWorkItems(cfg *config.Config, commitMessage string) error {
 
 func updateWorkItemTimestamps() error {
 	currentTime := time.Now().Format("2006-01-02T15:04:05Z")
-	
+
 	return filepath.Walk(".work", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		
+
 		if info.IsDir() {
 			return nil
 		}
-		
+
 		// Skip template files, IDEAS.md, and archived items
-		if strings.Contains(path, "template") || 
-		   strings.HasSuffix(path, "IDEAS.md") || 
-		   strings.Contains(path, "z_archive") {
+		if strings.Contains(path, "template") ||
+			strings.HasSuffix(path, "IDEAS.md") ||
+			strings.Contains(path, "z_archive") {
 			return nil
 		}
-		
+
 		// Only process markdown files
 		if !strings.HasSuffix(path, ".md") {
 			return nil
 		}
-		
+
 		// Update the updated timestamp
 		return updateFileTimestamp(path, currentTime)
 	})
@@ -188,4 +189,3 @@ func commitChanges(message string) error {
 	cmd := exec.Command("git", "commit", "-m", message)
 	return cmd.Run()
 }
-

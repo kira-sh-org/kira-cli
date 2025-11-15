@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+
 	"kira/internal/config"
 )
 
@@ -78,7 +79,6 @@ func moveWorkItem(cfg *config.Config, workItemID, targetStatus string) error {
 	return nil
 }
 
-
 func selectTargetStatus(cfg *config.Config) (string, error) {
 	fmt.Println("Available statuses:")
 	var statuses []string
@@ -104,4 +104,3 @@ func selectTargetStatus(cfg *config.Config) (string, error) {
 
 	return statuses[choice-1], nil
 }
-

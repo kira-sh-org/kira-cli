@@ -34,8 +34,8 @@ func addIdea(description string) error {
 	}
 
 	// Append new idea with timestamp (UTC for deterministic tests)
-		timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
-		newIdea := fmt.Sprintf("- [%s] %s\n", timestamp, description)
+	timestamp := time.Now().UTC().Format("2006-01-02 15:04:05")
+	newIdea := fmt.Sprintf("- [%s] %s\n", timestamp, description)
 
 	// Append to content
 	newContent := string(content) + newIdea
@@ -48,4 +48,3 @@ func addIdea(description string) error {
 	fmt.Printf("Added idea: %s\n", description)
 	return nil
 }
-

@@ -1,18 +1,18 @@
 package validation
 
 import (
-    "fmt"
-    "os"
-    "path/filepath"
-    "regexp"
-    "sort"
-    "strconv"
-    "strings"
-    "time"
+	"fmt"
+	"os"
+	"path/filepath"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
 
-    "gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 
-    "kira/internal/config"
+	"kira/internal/config"
 )
 
 type ValidationError struct {
@@ -49,11 +49,11 @@ func (r *ValidationResult) Error() string {
 }
 
 type WorkItem struct {
-	ID      string            `yaml:"id"`
-	Title   string            `yaml:"title"`
-	Status  string            `yaml:"status"`
-	Kind    string            `yaml:"kind"`
-	Created string            `yaml:"created"`
+	ID      string                 `yaml:"id"`
+	Title   string                 `yaml:"title"`
+	Status  string                 `yaml:"status"`
+	Kind    string                 `yaml:"kind"`
+	Created string                 `yaml:"created"`
 	Fields  map[string]interface{} `yaml:",inline"`
 }
 
@@ -141,37 +141,37 @@ func getWorkItemFiles() ([]string, error) {
 }
 
 func parseWorkItemFile(filePath string) (*WorkItem, error) {
-    content, err := os.ReadFile(filePath)
-    if err != nil {
-        return nil, err
-    }
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
 
-    // Extract YAML front matter between the first pair of --- lines
-    lines := strings.Split(string(content), "\n")
-    var yamlLines []string
-    inYAML := false
-    for i, line := range lines {
-        trimmed := strings.TrimSpace(line)
-        if i == 0 && trimmed == "---" {
-            inYAML = true
-            continue
-        }
-        if inYAML {
-            if trimmed == "---" {
-                break
-            }
-            yamlLines = append(yamlLines, line)
-        }
-    }
+	// Extract YAML front matter between the first pair of --- lines
+	lines := strings.Split(string(content), "\n")
+	var yamlLines []string
+	inYAML := false
+	for i, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if i == 0 && trimmed == "---" {
+			inYAML = true
+			continue
+		}
+		if inYAML {
+			if trimmed == "---" {
+				break
+			}
+			yamlLines = append(yamlLines, line)
+		}
+	}
 
-    wi := &WorkItem{Fields: make(map[string]interface{})}
-    if len(yamlLines) > 0 {
-        if err := yaml.Unmarshal([]byte(strings.Join(yamlLines, "\n")), wi); err != nil {
-            return nil, fmt.Errorf("failed to parse front matter: %w", err)
-        }
-    }
+	wi := &WorkItem{Fields: make(map[string]interface{})}
+	if len(yamlLines) > 0 {
+		if err := yaml.Unmarshal([]byte(strings.Join(yamlLines, "\n")), wi); err != nil {
+			return nil, fmt.Errorf("failed to parse front matter: %w", err)
+		}
+	}
 
-    return wi, nil
+	return wi, nil
 }
 
 func validateRequiredFields(workItem *WorkItem, cfg *config.Config) error {

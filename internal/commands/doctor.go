@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 	"kira/internal/config"
 	"kira/internal/validation"
 )
@@ -43,4 +44,3 @@ func fixDuplicateIDs(cfg *config.Config) error {
 
 	return nil
 }
-

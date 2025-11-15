@@ -31,25 +31,25 @@ type TemplateInput struct {
 
 func ParseTemplateInputs(content string) (*TemplateInput, error) {
 	inputs := make(map[string]Input)
-	
+
 	// Regex to match input comments: <!--input-type:variable-name:"description"-->
 	re := regexp.MustCompile(`<!--input-(\w+)(?:\[([^\]]+)\])?:([^:]+):"([^"]+)"-->`)
-	
+
 	matches := re.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
 		if len(match) != 5 {
 			continue
 		}
-		
+
 		inputType := match[1]
 		options := match[2]
 		name := match[3]
 		description := match[4]
-		
+
 		var input Input
 		input.Name = name
 		input.Description = description
-		
+
 		switch inputType {
 		case "string":
 			input.Type = InputString
@@ -73,10 +73,10 @@ func ParseTemplateInputs(content string) (*TemplateInput, error) {
 		default:
 			return nil, fmt.Errorf("unknown input type: %s", inputType)
 		}
-		
+
 		inputs[name] = input
 	}
-	
+
 	return &TemplateInput{Inputs: inputs}, nil
 }
 
@@ -85,19 +85,19 @@ func ProcessTemplate(templatePath string, inputs map[string]string) (string, err
 	if err != nil {
 		return "", fmt.Errorf("failed to read template: %w", err)
 	}
-	
+
 	result := string(content)
-	
+
 	// Replace input placeholders with provided values
 	for name, value := range inputs {
 		placeholder := fmt.Sprintf("<!--input-\\w+(?:\\[[^\\]]+\\])?:%s:\"[^\"]+\"-->", name)
 		re := regexp.MustCompile(placeholder)
 		result = re.ReplaceAllString(result, value)
 	}
-	
+
 	// Replace any remaining input placeholders with defaults
 	result = replaceRemainingInputs(result)
-	
+
 	return result, nil
 }
 
@@ -105,19 +105,19 @@ func replaceRemainingInputs(content string) string {
 	// Replace string inputs with empty string
 	re := regexp.MustCompile(`<!--input-string(?:\[[^\]]+\])?:([^:]+):"[^"]+"-->`)
 	content = re.ReplaceAllString(content, "")
-	
+
 	// Replace number inputs with 0
 	re = regexp.MustCompile(`<!--input-number:([^:]+):"[^"]+"-->`)
 	content = re.ReplaceAllString(content, "0")
-	
+
 	// Replace datetime inputs with current date
 	re = regexp.MustCompile(`<!--input-datetime(?:\[[^\]]+\])?:([^:]+):"[^"]+"-->`)
 	content = re.ReplaceAllString(content, time.Now().Format("2006-01-02"))
-	
+
 	// Replace strings inputs with empty array
 	re = regexp.MustCompile(`<!--input-strings(?:\[[^\]]+\])?:([^:]+):"[^"]+"-->`)
 	content = re.ReplaceAllString(content, "[]")
-	
+
 	return content
 }
 
@@ -126,17 +126,17 @@ func GetTemplateInputs(templatePath string) ([]Input, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read template: %w", err)
 	}
-	
+
 	templateInput, err := ParseTemplateInputs(string(content))
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var inputs []Input
 	for _, input := range templateInput.Inputs {
 		inputs = append(inputs, input)
 	}
-	
+
 	return inputs, nil
 }
 
@@ -147,19 +147,19 @@ func CreateDefaultTemplates(basePath string) error {
 		"template.spike.md": getSpikeTemplate(),
 		"template.task.md":  getTaskTemplate(),
 	}
-	
+
 	templatesDir := filepath.Join(basePath, "templates")
 	if err := os.MkdirAll(templatesDir, 0755); err != nil {
 		return fmt.Errorf("failed to create templates directory: %w", err)
 	}
-	
+
 	for filename, content := range templates {
 		path := filepath.Join(templatesDir, filename)
 		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 			return fmt.Errorf("failed to write template %s: %w", filename, err)
 		}
 	}
-	
+
 	return nil
 }
 

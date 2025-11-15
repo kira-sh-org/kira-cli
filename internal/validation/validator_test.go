@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	"kira/internal/config"
 )
 
@@ -43,7 +44,7 @@ This is a test feature.
 		assert.False(t, result.HasErrors())
 	})
 
-    t.Run("detects missing required fields", func(t *testing.T) {
+	t.Run("detects missing required fields", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
 		os.Chdir(tmpDir)
@@ -69,8 +70,8 @@ created: 2024-01-01
 		result, err := ValidateWorkItems(cfg)
 		require.NoError(t, err)
 
-        // Now that YAML front matter is parsed, missing title should be detected
-        assert.True(t, result.HasErrors())
+		// Now that YAML front matter is parsed, missing title should be detected
+		assert.True(t, result.HasErrors())
 	})
 }
 
