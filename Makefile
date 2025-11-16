@@ -1,4 +1,4 @@
-.PHONY: build test test-coverage clean clean-all install uninstall lint fmt check build-all install-tools clean-tools dev-setup help demo
+.PHONY: build test test-coverage clean clean-all install uninstall lint fmt check build-all release-snapshot install-tools clean-tools dev-setup help demo
 
 PREFIX ?= /usr/local
 DESTDIR ?=
@@ -23,6 +23,7 @@ test-coverage:
 # Clean build artifacts
 clean:
 	rm -f kira coverage.out coverage.html kira-*-amd64 kira-*-amd64.exe
+	rm -rf dist/
 
 # Clean everything: build artifacts, dev tools, and installed binary
 clean-all: clean clean-tools uninstall
@@ -56,6 +57,14 @@ build-all:
 	GOOS=darwin GOARCH=amd64 go build -o kira-darwin-amd64 cmd/kira/main.go
 	GOOS=windows GOARCH=amd64 go build -o kira-windows-amd64.exe cmd/kira/main.go
 
+# Test release locally using GoReleaser (does not create GitHub release)
+release-snapshot:
+	@if ! command -v goreleaser >/dev/null 2>&1; then \
+		echo "GoReleaser not found. Install it with: go install github.com/goreleaser/goreleaser@latest"; \
+		exit 1; \
+	fi
+	goreleaser release --snapshot --clean
+
 # Install required developer tools
 install-tools:
 	@echo "Installing developer tools..."
@@ -78,7 +87,14 @@ install-tools:
 	  echo "Running install script (it handles SHA256 checksum verification)..."; \
 	  sh $$INSTALL_SCRIPT -b $$BIN_DIR $(GOLANGCI_LINT_VERSION); \
 	  echo "Cleaning up temporary install script..."; \
-	  rm -f $$INSTALL_SCRIPT
+	  rm -f $$INSTALL_SCRIPT; \
+	  echo ""; \
+	  echo "Installing GoReleaser..."; \
+	  if command -v goreleaser >/dev/null 2>&1; then \
+	    echo "GoReleaser already installed, skipping"; \
+	  else \
+	    go install github.com/goreleaser/goreleaser@latest || echo "Failed to install GoReleaser"; \
+	  fi
 
 # Clean up developer tools installed by install-tools/dev-setup
 clean-tools:
@@ -90,6 +106,13 @@ clean-tools:
 	    echo "golangci-lint removed"; \
 	  else \
 	    echo "golangci-lint not found in $$BIN_DIR"; \
+	  fi; \
+	  if [ -f "$$BIN_DIR/goreleaser" ]; then \
+	    echo "Removing goreleaser from $$BIN_DIR..."; \
+	    rm -f "$$BIN_DIR/goreleaser"; \
+	    echo "goreleaser removed"; \
+	  else \
+	    echo "goreleaser not found in $$BIN_DIR"; \
 	  fi
 	@echo "Developer tools cleaned up"
 

@@ -29,3 +29,6 @@ e2e-test/
 *.tmp
 *.temp
 
+# GoReleaser artifacts
+dist/
+

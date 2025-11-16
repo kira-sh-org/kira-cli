@@ -1,0 +1,58 @@
+# GoReleaser configuration for kira CLI
+project_name: kira
+
+builds:
+  - id: kira
+    main: ./cmd/kira/main.go
+    binary: kira
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    goarm:
+      - "7" # for arm64 compatibility
+    ldflags:
+      - -X 'kira/internal/commands.Version={{.Tag}}'
+      - -X 'kira/internal/commands.Commit={{.ShortCommit}}'
+      - -X 'kira/internal/commands.BuildDate={{.Date}}'
+      - -X 'kira/internal/commands.Dirty={{ if .Dirty }}dirty{{ else }}clean{{ end }}'
+    env:
+      - CGO_ENABLED=0
+
+archives:
+  - id: default
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    files:
+      - README.md
+      - kira.yml
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+
+release:
+  github:
+    owner: kira-os
+    name: kira-cli
+  mode: replace
+  header: |
+    ## What's Changed
+  footer: |
+    **Full Changelog**: https://github.com/kira-os/kira-cli/compare/{{ .PreviousTag }}...{{ .Tag }}
+

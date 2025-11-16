@@ -48,7 +48,7 @@ All formatting and linting is handled by `golangci-lint` using the configuration
 Install dev tools (first time):
 
 ```bash
-make dev-setup   # installs golangci-lint
+make dev-setup   # installs golangci-lint and goreleaser
 ```
 
 Format and organize imports (writes changes):
@@ -63,6 +63,16 @@ Verify formatting, lint, and tests:
 make lint   # runs: golangci-lint run (includes formatting, vet, and all linters)
 make check  # runs: lint + test
 ```
+
+## Testing Releases Locally
+
+Before creating a release, you can test the release process locally using GoReleaser's snapshot mode:
+
+```bash
+make release-snapshot   # Builds binaries for all platforms without creating a GitHub release
+```
+
+This creates artifacts in the `dist/` directory that you can inspect. Note: GoReleaser must be installed (included in `make dev-setup`).
 
 ## Installing the Built Binary
 

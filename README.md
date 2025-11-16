@@ -10,23 +10,37 @@ Unlike Jira and other tools that are overly complicated and expensive, Kira keep
 
 ## Installation
 
-### Makefile (recommended)
+### Download Pre-built Binaries (Recommended)
 
+Pre-built binaries are available for Linux, macOS, and Windows on the [GitHub Releases](https://github.com/kira-os/kira-cli/releases) page.
+
+**Linux/macOS:**
 ```bash
-# System-wide install (default prefix /usr/local)
-sudo make install
+# Download and extract the appropriate archive for your platform
+# Example for Linux amd64:
+wget https://github.com/kira-os/kira-cli/releases/latest/download/kira_linux_amd64.tar.gz
+tar -xzf kira_linux_amd64.tar.gz
+sudo mv kira /usr/local/bin/
 
-# User install without sudo
-make install PREFIX="$HOME/.local"
+# Or for macOS arm64:
+wget https://github.com/kira-os/kira-cli/releases/latest/download/kira_darwin_arm64.tar.gz
+tar -xzf kira_darwin_arm64.tar.gz
+sudo mv kira /usr/local/bin/
+```
+
+**Windows:**
+```powershell
+# Download and extract the zip file
+# Extract kira.exe and add it to your PATH
 ```
 
 ### Using Go Install
 
 ```bash
-go install github.com/your-org/kira/cmd/kira@latest
+go install github.com/kira-os/kira-cli/cmd/kira@latest
 ```
 
-### From Source (contributors)
+### Build from Source (Contributors)
 
 If you want to build and test locally, see the contributor guide:
 
