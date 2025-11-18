@@ -12,6 +12,32 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// findRepoRoot finds the repository root by walking up from the current file
+// until it finds go.mod. In GitHub Actions, uses GITHUB_WORKSPACE if available.
+func findRepoRoot() (string, error) {
+	// Check for GitHub Actions workspace first
+	if workspace := os.Getenv("GITHUB_WORKSPACE"); workspace != "" {
+		if _, err := os.Stat(filepath.Join(workspace, "go.mod")); err == nil {
+			return workspace, nil
+		}
+	}
+
+	// Fall back to walking up from the test file
+	_, thisFile, _, _ := runtime.Caller(1)
+	dir := filepath.Dir(thisFile)
+	for {
+		goModPath := filepath.Join(dir, "go.mod")
+		if _, err := os.Stat(goModPath); err == nil {
+			return dir, nil
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return "", os.ErrNotExist
+		}
+		dir = parent
+	}
+}
+
 func TestCLIIntegration(t *testing.T) {
 	t.Run("full workflow test", func(t *testing.T) {
 		tmpDir := t.TempDir()
@@ -19,11 +45,11 @@ func TestCLIIntegration(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
-		_, thisFile, _, _ := runtime.Caller(0)
-		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
+		repoRoot, err := findRepoRoot()
+		require.NoError(t, err, "failed to find repo root")
 		outPath := filepath.Join(tmpDir, "kira")
-		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
-		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
+		// Use relative path when Dir is set - Go resolves it relative to Dir
+		buildCmd := exec.Command("go", "build", "-o", outPath, "cmd/kira/main.go")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -161,11 +187,11 @@ func TestCLIIntegration(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
-		_, thisFile, _, _ := runtime.Caller(0)
-		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
+		repoRoot, err := findRepoRoot()
+		require.NoError(t, err, "failed to find repo root")
 		outPath := filepath.Join(tmpDir, "kira")
-		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
-		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
+		// Use relative path when Dir is set - Go resolves it relative to Dir
+		buildCmd := exec.Command("go", "build", "-o", outPath, "cmd/kira/main.go")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -240,11 +266,11 @@ Added user authentication system.
 		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
-		_, thisFile, _, _ := runtime.Caller(0)
-		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
+		repoRoot, err := findRepoRoot()
+		require.NoError(t, err, "failed to find repo root")
 		outPath := filepath.Join(tmpDir, "kira")
-		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
-		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
+		// Use relative path when Dir is set - Go resolves it relative to Dir
+		buildCmd := exec.Command("go", "build", "-o", outPath, "cmd/kira/main.go")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
