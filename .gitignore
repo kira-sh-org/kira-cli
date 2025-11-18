@@ -1,7 +1,8 @@
 # Binaries
-kira
+/kira
 kira-*
 *.exe
+.tmp-install/
 
 # Test coverage
 coverage.out
