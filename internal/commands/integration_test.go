@@ -22,8 +22,8 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		cmdDir := filepath.Join(repoRoot, "cmd", "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, cmdDir)
+		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
+		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -164,8 +164,8 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		cmdDir := filepath.Join(repoRoot, "cmd", "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, cmdDir)
+		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
+		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -243,8 +243,8 @@ Added user authentication system.
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		cmdDir := filepath.Join(repoRoot, "cmd", "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, cmdDir)
+		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
+		buildCmd := exec.Command("go", "build", "-o", outPath, mainPath)
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
