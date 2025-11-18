@@ -16,7 +16,7 @@ func TestFindWorkItemFile(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o700))
 
 		// Create a work item file
 		workItemContent := `---
@@ -30,7 +30,7 @@ created: 2024-01-01
 # Test Feature
 `
 		filePath := ".work/1_todo/001-test-feature.prd.md"
-		require.NoError(t, os.WriteFile(filePath, []byte(workItemContent), 0o644))
+		require.NoError(t, os.WriteFile(filePath, []byte(workItemContent), 0o600))
 
 		// Find the work item
 		foundPath, err := findWorkItemFile("001")
@@ -44,7 +44,7 @@ created: 2024-01-01
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o700))
 
 		// Try to find non-existent work item
 		_, err := findWorkItemFile("999")
@@ -71,7 +71,7 @@ created: 2024-01-01
 # Test Feature
 `
 		filePath := "test-work-item.md"
-		require.NoError(t, os.WriteFile(filePath, []byte(workItemContent), 0o644))
+		require.NoError(t, os.WriteFile(filePath, []byte(workItemContent), 0o600))
 
 		// Update status
 		err := updateWorkItemStatus(filePath, "doing")
@@ -93,7 +93,7 @@ func TestGetWorkItemFiles(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create directory structure
-		require.NoError(t, os.MkdirAll("test-dir", 0o755))
+		require.NoError(t, os.MkdirAll("test-dir", 0o700))
 
 		// Create work item files
 		workItem1 := `---
@@ -108,9 +108,9 @@ title: Test Feature 2
 ---
 # Test Feature 2
 `
-		require.NoError(t, os.WriteFile("test-dir/001-feature1.md", []byte(workItem1), 0o644))
-		require.NoError(t, os.WriteFile("test-dir/002-feature2.md", []byte(workItem2), 0o644))
-		require.NoError(t, os.WriteFile("test-dir/not-a-work-item.txt", []byte("not a work item"), 0o644))
+		require.NoError(t, os.WriteFile("test-dir/001-feature1.md", []byte(workItem1), 0o600))
+		require.NoError(t, os.WriteFile("test-dir/002-feature2.md", []byte(workItem2), 0o600))
+		require.NoError(t, os.WriteFile("test-dir/not-a-work-item.txt", []byte("not a work item"), 0o600))
 
 		// Get work item files
 		files, err := getWorkItemFiles("test-dir")
@@ -130,7 +130,7 @@ func TestArchiveWorkItems(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		require.NoError(t, os.MkdirAll(".work", 0o755))
+		require.NoError(t, os.MkdirAll(".work", 0o700))
 
 		// Create work item files
 		workItem1 := `---
@@ -145,8 +145,8 @@ title: Test Feature 2
 ---
 # Test Feature 2
 `
-		require.NoError(t, os.WriteFile("work-item1.md", []byte(workItem1), 0o644))
-		require.NoError(t, os.WriteFile("work-item2.md", []byte(workItem2), 0o644))
+		require.NoError(t, os.WriteFile("work-item1.md", []byte(workItem1), 0o600))
+		require.NoError(t, os.WriteFile("work-item2.md", []byte(workItem2), 0o600))
 
 		workItems := []string{"work-item1.md", "work-item2.md"}
 

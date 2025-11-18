@@ -43,7 +43,7 @@ func init() {
 func initializeWorkspace(targetDir string) error {
 	// Create .work directory
 	workDir := filepath.Join(targetDir, ".work")
-	if err := os.MkdirAll(workDir, 0o755); err != nil {
+	if err := os.MkdirAll(workDir, 0o700); err != nil {
 		return fmt.Errorf("failed to create .work directory: %w", err)
 	}
 
@@ -51,10 +51,10 @@ func initializeWorkspace(targetDir string) error {
 	cfg := &config.DefaultConfig
 	for _, folder := range cfg.StatusFolders {
 		folderPath := filepath.Join(workDir, folder)
-		if err := os.MkdirAll(folderPath, 0o755); err != nil {
+		if err := os.MkdirAll(folderPath, 0o700); err != nil {
 			return fmt.Errorf("failed to create folder %s: %w", folder, err)
 		}
-		if err := os.WriteFile(filepath.Join(folderPath, ".gitkeep"), []byte(""), 0o644); err != nil {
+		if err := os.WriteFile(filepath.Join(folderPath, ".gitkeep"), []byte(""), 0o600); err != nil {
 			return fmt.Errorf("failed to create .gitkeep in %s: %w", folder, err)
 		}
 	}
@@ -63,7 +63,7 @@ func initializeWorkspace(targetDir string) error {
 	if err := templates.CreateDefaultTemplates(workDir); err != nil {
 		return fmt.Errorf("failed to create default templates: %w", err)
 	}
-	if err := os.WriteFile(filepath.Join(workDir, "templates", ".gitkeep"), []byte(""), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(workDir, "templates", ".gitkeep"), []byte(""), 0o600); err != nil {
 		return fmt.Errorf("failed to create .gitkeep in templates: %w", err)
 	}
 
@@ -81,7 +81,7 @@ This file is for capturing quick ideas and thoughts that don't fit into formal w
 
 `
 	if _, err := os.Stat(ideasPath); os.IsNotExist(err) {
-		if err := os.WriteFile(ideasPath, []byte(header), 0o644); err != nil {
+		if err := os.WriteFile(ideasPath, []byte(header), 0o600); err != nil {
 			return fmt.Errorf("failed to create IDEAS.md: %w", err)
 		}
 	} else {
@@ -91,7 +91,7 @@ This file is for capturing quick ideas and thoughts that don't fit into formal w
 		}
 		if !strings.HasPrefix(string(content), "# Ideas") {
 			newContent := header + string(content)
-			if err := os.WriteFile(ideasPath, []byte(newContent), 0o644); err != nil {
+			if err := os.WriteFile(ideasPath, []byte(newContent), 0o600); err != nil {
 				return fmt.Errorf("failed to update IDEAS.md: %w", err)
 			}
 		}

@@ -17,7 +17,7 @@ func TestLintWorkItems(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o700))
 
 		// Create a valid work item
 		workItemContent := `---
@@ -33,7 +33,7 @@ created: 2024-01-01
 ## Context
 This is a test feature.
 `
-		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o600))
 
 		cfg := &config.DefaultConfig
 		err := lintWorkItems(cfg)
@@ -46,7 +46,7 @@ This is a test feature.
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o700))
 
 		// Create an invalid work item (invalid status)
 		workItemContent := `---
@@ -59,7 +59,7 @@ created: 2024-01-01
 
 # Test Feature
 `
-		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o600))
 
 		cfg := &config.DefaultConfig
 		err := lintWorkItems(cfg)

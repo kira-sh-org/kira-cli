@@ -161,11 +161,11 @@ func SaveConfigToDir(config *Config, targetDir string) error {
 	// Write to root-level kira.yml in the target directory
 	configPath := filepath.Join(targetDir, "kira.yml")
 	// Ensure targetDir exists
-	if err := os.MkdirAll(targetDir, 0o755); err != nil {
+	if err := os.MkdirAll(targetDir, 0o700); err != nil {
 		return fmt.Errorf("failed to ensure target directory: %w", err)
 	}
 
-	if err := os.WriteFile(configPath, data, 0o644); err != nil {
+	if err := os.WriteFile(configPath, data, 0o600); err != nil {
 		return fmt.Errorf("failed to write config file: %w", err)
 	}
 

@@ -151,7 +151,7 @@ func updateFileTimestamp(filePath, timestamp string) error {
 		}
 	}
 
-	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0o644)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0o600)
 }
 
 func checkExternalChanges() (bool, error) {

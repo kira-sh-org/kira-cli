@@ -30,7 +30,7 @@ status_folders:
   todo: "custom_todo"
 `
 
-		require.NoError(t, os.WriteFile("kira.yml", []byte(testConfig), 0o644))
+		require.NoError(t, os.WriteFile("kira.yml", []byte(testConfig), 0o600))
 		defer func() { _ = os.Remove("kira.yml") }()
 
 		config, err := LoadConfig()

@@ -177,7 +177,7 @@ func updateReleasesFile(cfg *config.Config, releaseNotes string) error {
 	newContent := fmt.Sprintf("# Release %s\n\n%s\n\n%s", date, releaseNotes, content)
 
 	// Write back to file
-	if err := os.WriteFile(releasesPath, []byte(newContent), 0o644); err != nil {
+	if err := os.WriteFile(releasesPath, []byte(newContent), 0o600); err != nil {
 		return fmt.Errorf("failed to write releases file: %w", err)
 	}
 

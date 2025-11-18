@@ -64,7 +64,7 @@ func updateWorkItemStatus(filePath, newStatus string) error {
 		}
 	}
 
-	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0o644)
+	return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0o600)
 }
 
 // getWorkItemFiles returns all work item files in a directory
@@ -96,7 +96,7 @@ func archiveWorkItems(workItems []string, sourcePath string) (string, error) {
 	date := time.Now().Format("2006-01-02")
 	archiveDir := filepath.Join(".work", "z_archive", date, filepath.Base(sourcePath))
 
-	if err := os.MkdirAll(archiveDir, 0o755); err != nil {
+	if err := os.MkdirAll(archiveDir, 0o700); err != nil {
 		return "", fmt.Errorf("failed to create archive directory: %w", err)
 	}
 
@@ -110,7 +110,7 @@ func archiveWorkItems(workItems []string, sourcePath string) (string, error) {
 			return "", fmt.Errorf("failed to read work item: %w", err)
 		}
 
-		if err := os.WriteFile(archivePath, content, 0o644); err != nil {
+		if err := os.WriteFile(archivePath, content, 0o600); err != nil {
 			return "", fmt.Errorf("failed to write to archive: %w", err)
 		}
 	}

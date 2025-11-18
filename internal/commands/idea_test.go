@@ -17,13 +17,13 @@ func TestAddIdea(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory and IDEAS.md
-		require.NoError(t, os.MkdirAll(".work", 0o755))
+		require.NoError(t, os.MkdirAll(".work", 0o700))
 		ideasContent := `# Ideas
 
 ## Ideas
 
 `
-		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644))
+		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o600))
 
 		// Add an idea
 		err := addIdea("Test idea for testing")
@@ -43,13 +43,13 @@ func TestAddIdea(t *testing.T) {
 		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory and IDEAS.md
-		require.NoError(t, os.MkdirAll(".work", 0o755))
+		require.NoError(t, os.MkdirAll(".work", 0o700))
 		ideasContent := `# Ideas
 
 ## Ideas
 
 `
-		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644))
+		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o600))
 
 		// Add an idea
 		beforeTime := time.Now()

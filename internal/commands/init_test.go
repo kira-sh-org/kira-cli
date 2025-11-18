@@ -44,7 +44,7 @@ func TestInitializeWorkspace(t *testing.T) {
 
 		// Create a pre-existing file
 		existingFile := filepath.Join(tmpDir, "existing.txt")
-		err := os.WriteFile(existingFile, []byte("existing content"), 0o644)
+		err := os.WriteFile(existingFile, []byte("existing content"), 0o600)
 		require.NoError(t, err)
 
 		err = initializeWorkspace(tmpDir)
@@ -64,9 +64,9 @@ func TestIdeasFileBehavior(t *testing.T) {
 
 		// Pre-create .work/IDEAS.md with custom content only
 		workDir := filepath.Join(tmpDir, ".work")
-		require.NoError(t, os.MkdirAll(workDir, 0o755))
+		require.NoError(t, os.MkdirAll(workDir, 0o700))
 		existing := "Custom ideas content\n- [2025-01-01] Something\n"
-		require.NoError(t, os.WriteFile(filepath.Join(workDir, "IDEAS.md"), []byte(existing), 0o644))
+		require.NoError(t, os.WriteFile(filepath.Join(workDir, "IDEAS.md"), []byte(existing), 0o600))
 
 		// Initialize (should prepend header without wiping existing)
 		err := initializeWorkspace(tmpDir)

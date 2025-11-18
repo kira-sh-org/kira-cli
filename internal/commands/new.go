@@ -243,12 +243,12 @@ func writeWorkItemFile(cfg *config.Config, template, nextID, title, status strin
 	}
 
 	statusFolderPath := filepath.Join(".work", statusFolder)
-	if err := os.MkdirAll(statusFolderPath, 0o755); err != nil {
+	if err := os.MkdirAll(statusFolderPath, 0o700); err != nil {
 		return fmt.Errorf("failed to create status folder: %w", err)
 	}
 
 	filePath := filepath.Join(statusFolderPath, filename)
-	if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), 0o600); err != nil {
 		return fmt.Errorf("failed to write work item file: %w", err)
 	}
 
