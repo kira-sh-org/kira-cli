@@ -31,8 +31,31 @@ clean-all: clean clean-tools uninstall
 
 # Install kira to $(PREFIX)/bin
 install: build
-	install -d "$(DESTDIR)$(PREFIX)/bin"
-	install -m 0755 kira "$(DESTDIR)$(PREFIX)/bin/kira"
+	@ERROR_OUTPUT=$$(install -d "$(DESTDIR)$(PREFIX)/bin" 2>&1); \
+	EXIT_CODE=$$?; \
+	if [ $$EXIT_CODE -ne 0 ]; then \
+		if echo "$$ERROR_OUTPUT" | grep -qi "permission\|denied"; then \
+			echo "Error: Permission denied. Try running with sudo:"; \
+			echo "  sudo make install"; \
+			exit 1; \
+		else \
+			echo "$$ERROR_OUTPUT"; \
+			exit $$EXIT_CODE; \
+		fi; \
+	fi
+	@ERROR_OUTPUT=$$(install -m 0755 kira "$(DESTDIR)$(PREFIX)/bin/kira" 2>&1); \
+	EXIT_CODE=$$?; \
+	if [ $$EXIT_CODE -ne 0 ]; then \
+		if echo "$$ERROR_OUTPUT" | grep -qi "permission\|denied"; then \
+			echo "Error: Permission denied. Try running with sudo:"; \
+			echo "  sudo make install"; \
+			exit 1; \
+		else \
+			echo "$$ERROR_OUTPUT"; \
+			exit $$EXIT_CODE; \
+		fi; \
+	fi
+	@echo "kira installed successfully to $(DESTDIR)$(PREFIX)/bin/kira"
 
 # Uninstall kira from $(PREFIX)/bin
 uninstall:
