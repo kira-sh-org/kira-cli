@@ -31,7 +31,19 @@ jobs:
       - name: Install tooling
         run: make install-tools
 
-      - name: Run checks
+      - name: Run checks (includes linting, tests, gosec, and govulncheck)
         run: make check
+
+      - name: Run tests with coverage
+        run: make test-coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: |
+            coverage.out
+            coverage.html
 
 

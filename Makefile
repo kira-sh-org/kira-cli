@@ -1,4 +1,4 @@
-.PHONY: build test test-coverage clean clean-all install uninstall lint fmt check build-all release-snapshot install-tools clean-tools dev-setup help demo
+.PHONY: build test test-coverage clean clean-all install uninstall lint fmt check security build-all release-snapshot install-tools clean-tools dev-setup help demo
 
 PREFIX ?= /usr/local
 DESTDIR ?=
@@ -71,8 +71,13 @@ lint:
 fmt:
 	@PATH="$$(go env GOPATH)/bin:$$PATH" golangci-lint run --fix
 
-# Run all checks (lint includes formatting and vet checks via golangci-lint)
-check: lint test
+# Run vulnerability check (gosec runs via golangci-lint)
+security:
+	@echo "Running govulncheck vulnerability scanner..."
+	@PATH="$$(go env GOPATH)/bin:$$PATH" govulncheck ./...
+
+# Run all checks (lint includes formatting, vet, and gosec security checks via golangci-lint)
+check: lint security test
 
 # Build for multiple platforms
 build-all:
@@ -117,6 +122,13 @@ install-tools:
 	    echo "GoReleaser already installed, skipping"; \
 	  else \
 	    go install github.com/goreleaser/goreleaser@latest || echo "Failed to install GoReleaser"; \
+	  fi; \
+	  echo ""; \
+	  echo "Installing govulncheck..."; \
+	  if command -v govulncheck >/dev/null 2>&1; then \
+	    echo "govulncheck already installed, skipping"; \
+	  else \
+	    go install golang.org/x/vuln/cmd/govulncheck@latest || echo "Failed to install govulncheck"; \
 	  fi
 
 # Clean up developer tools installed by install-tools/dev-setup
@@ -136,6 +148,13 @@ clean-tools:
 	    echo "goreleaser removed"; \
 	  else \
 	    echo "goreleaser not found in $$BIN_DIR"; \
+	  fi; \
+	  if [ -f "$$BIN_DIR/govulncheck" ]; then \
+	    echo "Removing govulncheck from $$BIN_DIR..."; \
+	    rm -f "$$BIN_DIR/govulncheck"; \
+	    echo "govulncheck removed"; \
+	  else \
+	    echo "govulncheck not found in $$BIN_DIR"; \
 	  fi
 	@echo "Developer tools cleaned up"
 
