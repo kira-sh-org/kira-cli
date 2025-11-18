@@ -38,6 +38,80 @@ func findRepoRoot() (string, error) {
 	}
 }
 
+// logDirectoryContents logs the contents of a directory for debugging.
+func logDirectoryContents(t *testing.T, label, dirPath string) {
+	entries, err := os.ReadDir(dirPath)
+	if err == nil {
+		var names []string
+		for _, e := range entries {
+			names = append(names, e.Name())
+		}
+		t.Logf("  %s contents: %v", label, names)
+	}
+}
+
+// verifyBuildPaths verifies that all required paths exist for building.
+func verifyBuildPaths(t *testing.T, repoRoot, mainPath string) {
+	if _, err := os.Stat(repoRoot); err != nil {
+		t.Fatalf("repoRoot does not exist: %s (error: %v)", repoRoot, err)
+	}
+
+	logDirectoryContents(t, "repoRoot", repoRoot)
+
+	cmdDir := filepath.Join(repoRoot, "cmd")
+	if _, err := os.Stat(cmdDir); err != nil {
+		t.Fatalf("cmd directory does not exist: %s (error: %v)", cmdDir, err)
+	}
+	t.Logf("  cmd directory exists: %s", cmdDir)
+	logDirectoryContents(t, "cmd directory", cmdDir)
+
+	kiraDir := filepath.Join(repoRoot, "cmd", "kira")
+	if _, err := os.Stat(kiraDir); err != nil {
+		t.Fatalf("cmd/kira directory does not exist: %s (error: %v)", kiraDir, err)
+	}
+	t.Logf("  cmd/kira directory exists: %s", kiraDir)
+	logDirectoryContents(t, "cmd/kira directory", kiraDir)
+
+	if _, err := os.Stat(mainPath); err != nil {
+		t.Fatalf("main.go does not exist: %s (error: %v)", mainPath, err)
+	}
+	goModPath := filepath.Join(repoRoot, "go.mod")
+	if _, err := os.Stat(goModPath); err != nil {
+		t.Fatalf("go.mod does not exist at: %s (error: %v)", goModPath, err)
+	}
+}
+
+// buildKiraBinary builds the kira binary for testing with diagnostic logging.
+func buildKiraBinary(t *testing.T, tmpDir string) string {
+	repoRoot, err := findRepoRoot()
+	require.NoError(t, err, "failed to find repo root")
+	outPath := filepath.Join(tmpDir, "kira")
+	mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
+
+	// Diagnostic logging
+	t.Logf("Build diagnostics:")
+	t.Logf("  tmpDir: %s", tmpDir)
+	t.Logf("  repoRoot: %s", repoRoot)
+	t.Logf("  outPath: %s", outPath)
+	t.Logf("  mainPath: %s", mainPath)
+	t.Logf("  GITHUB_WORKSPACE: %s", os.Getenv("GITHUB_WORKSPACE"))
+
+	verifyBuildPaths(t, repoRoot, mainPath)
+
+	// Build from repo root directory - Go needs to be in module context
+	buildCmd := exec.Command("go", "build", "-o", outPath, "cmd/kira/main.go")
+	buildCmd.Dir = repoRoot
+	t.Logf("  build command: go build -o %s cmd/kira/main.go (Dir: %s)", outPath, repoRoot)
+	output, err := buildCmd.CombinedOutput()
+	if err != nil {
+		t.Logf("Build output: %s", string(output))
+		t.Logf("Build error: %v", err)
+	}
+	require.NoError(t, err, "build failed: %s", string(output))
+
+	return outPath
+}
+
 func TestCLIIntegration(t *testing.T) {
 	t.Run("full workflow test", func(t *testing.T) {
 		tmpDir := t.TempDir()
@@ -47,98 +121,12 @@ func TestCLIIntegration(t *testing.T) {
 		defer func() { _ = os.Chdir(originalDir) }()
 
 		// Build the kira binary for testing
-		repoRoot, err := findRepoRoot()
-		require.NoError(t, err, "failed to find repo root")
-		outPath := filepath.Join(tmpDir, "kira")
-		mainPath := filepath.Join(repoRoot, "cmd", "kira", "main.go")
-
-		// Diagnostic logging
-		t.Logf("Build diagnostics:")
-		t.Logf("  tmpDir: %s", tmpDir)
-		t.Logf("  repoRoot: %s", repoRoot)
-		t.Logf("  outPath: %s", outPath)
-		t.Logf("  mainPath: %s", mainPath)
-		t.Logf("  GITHUB_WORKSPACE: %s", os.Getenv("GITHUB_WORKSPACE"))
-		t.Logf("  current working dir: %s", originalDir)
-
-		// Verify paths exist
-		if _, err := os.Stat(repoRoot); err != nil {
-			t.Fatalf("repoRoot does not exist: %s (error: %v)", repoRoot, err)
-		}
-
-		// List repo root contents for debugging
-		entries, err := os.ReadDir(repoRoot)
-		if err == nil {
-			t.Logf("  repoRoot contents: %v", func() []string {
-				var names []string
-				for _, e := range entries {
-					names = append(names, e.Name())
-				}
-				return names
-			}())
-		}
-
-		// Check if cmd directory exists
-		cmdDir := filepath.Join(repoRoot, "cmd")
-		if _, err := os.Stat(cmdDir); err != nil {
-			t.Fatalf("cmd directory does not exist: %s (error: %v)", cmdDir, err)
-		}
-		t.Logf("  cmd directory exists: %s", cmdDir)
-
-		// List cmd directory contents
-		cmdEntries, err := os.ReadDir(cmdDir)
-		if err == nil {
-			t.Logf("  cmd directory contents: %v", func() []string {
-				var names []string
-				for _, e := range cmdEntries {
-					names = append(names, e.Name())
-				}
-				return names
-			}())
-		}
-
-		// Check if cmd/kira directory exists
-		kiraDir := filepath.Join(repoRoot, "cmd", "kira")
-		if _, err := os.Stat(kiraDir); err != nil {
-			t.Fatalf("cmd/kira directory does not exist: %s (error: %v)", kiraDir, err)
-		}
-		t.Logf("  cmd/kira directory exists: %s", kiraDir)
-
-		// List cmd/kira directory contents
-		kiraEntries, err := os.ReadDir(kiraDir)
-		if err == nil {
-			t.Logf("  cmd/kira directory contents: %v", func() []string {
-				var names []string
-				for _, e := range kiraEntries {
-					names = append(names, e.Name())
-				}
-				return names
-			}())
-		}
-
-		if _, err := os.Stat(mainPath); err != nil {
-			t.Fatalf("main.go does not exist: %s (error: %v)", mainPath, err)
-		}
-		goModPath := filepath.Join(repoRoot, "go.mod")
-		if _, err := os.Stat(goModPath); err != nil {
-			t.Fatalf("go.mod does not exist at: %s (error: %v)", goModPath, err)
-		}
-
-		// Build from repo root directory - Go needs to be in module context
-		buildCmd := exec.Command("go", "build", "-o", outPath, "cmd/kira/main.go")
-		buildCmd.Dir = repoRoot
-		t.Logf("  build command: go build -o %s cmd/kira/main.go (Dir: %s)", outPath, repoRoot)
-		output, err := buildCmd.CombinedOutput()
-		if err != nil {
-			t.Logf("Build output: %s", string(output))
-			t.Logf("Build error: %v", err)
-		}
-		require.NoError(t, err, "build failed: %s", string(output))
+		_ = buildKiraBinary(t, tmpDir)
 		defer func() { _ = os.Remove("kira") }()
 
 		// Test kira init
 		initCmd := exec.Command("./kira", "init")
-		output, err = initCmd.CombinedOutput()
+		output, err := initCmd.CombinedOutput()
 		require.NoError(t, err, "init failed: %s", string(output))
 		assert.Contains(t, string(output), "Initialized kira workspace")
 
