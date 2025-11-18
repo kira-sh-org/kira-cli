@@ -93,14 +93,19 @@ Notes:
 Creates a new work item from a template.
 
 ```bash
-kira new                                              # Interactive mode
+kira new                                              # Prompts for template selection
 kira new prd doing "Fix login bug"                    # Status before title
-kira new prd "Feature" --ignore-input                # Skip prompts
-kira new prd backlog "Feature"                        # Explicit status
 kira new prd "Feature"                                # Status omitted → defaults to backlog
+kira new prd backlog "Feature"                        # Explicit status
+kira new prd "Feature" --interactive                  # Enable prompts for missing fields
+kira new prd "Feature" -I                            # Shorthand for --interactive
 kira new prd "Feature" --input due=2025-01-01        # Provide inputs (key=value)
 kira new prd "Feature" --input assigned=me@acme.com  # Multiple --input allowed
 ```
+
+Notes:
+- By default, only provided values are filled; missing template fields use defaults
+- Use `--interactive` (or `-I`) to enable prompts for missing template fields
 
 ### `kira move <work-item-id> [target-status]`
 Moves a work item to a different status folder.

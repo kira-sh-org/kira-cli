@@ -104,7 +104,8 @@ func TestCLIIntegration(t *testing.T) {
 		require.NoError(t, err, "init failed: %s", string(output))
 
 		// Create work item without status (should default to backlog)
-		newCmd := exec.Command("./kira", "new", "prd", "Default Status Feature", "--ignore-input")
+		// Note: Without --interactive flag, no prompts should appear (default behavior)
+		newCmd := exec.Command("./kira", "new", "prd", "Default Status Feature")
 		output, err = newCmd.CombinedOutput()
 		require.NoError(t, err, "new failed: %s", string(output))
 
@@ -134,7 +135,7 @@ func TestCLIIntegration(t *testing.T) {
 		require.NoError(t, err, "init failed: %s", string(output))
 
 		// Create a sentinel and remove a folder to simulate missing
-		require.NoError(t, os.WriteFile(".work/1_todo/sentinel.txt", []byte("x"), 0644))
+		require.NoError(t, os.WriteFile(".work/1_todo/sentinel.txt", []byte("x"), 0o644))
 		require.NoError(t, os.RemoveAll(".work/3_review"))
 
 		// Fill missing
@@ -205,7 +206,7 @@ Use JWT tokens for authentication.
 ## Release Notes
 Added user authentication system.
 `
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0644)
+		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
 
 		// Test kira lint
 		lintCmd := exec.Command("./kira", "lint")
@@ -296,7 +297,7 @@ Added user authentication system.
 		require.NoError(t, err, "init failed: %s", string(output))
 
 		// Create a done item with Release Notes section
-		require.NoError(t, os.MkdirAll(".work/4_done", 0755))
+		require.NoError(t, os.MkdirAll(".work/4_done", 0o755))
 		doneItem := `---
 id: 001
 title: Done Feature
@@ -313,7 +314,7 @@ Something
 ## Release Notes
 This is a release note entry.
 `
-		require.NoError(t, os.WriteFile(".work/4_done/001-done-feature.prd.md", []byte(doneItem), 0644))
+		require.NoError(t, os.WriteFile(".work/4_done/001-done-feature.prd.md", []byte(doneItem), 0o644))
 
 		// Run release (default from done)
 		releaseCmd := exec.Command("./kira", "release")
@@ -353,7 +354,7 @@ This is a release note entry.
 		require.NoError(t, err, "init failed: %s", string(output))
 
 		// Create two items in todo and a subfolder
-		require.NoError(t, os.MkdirAll(".work/1_todo/sub", 0755))
+		require.NoError(t, os.MkdirAll(".work/1_todo/sub", 0o755))
 		item1 := `---
 id: 001
 title: Todo One
@@ -370,8 +371,8 @@ kind: prd
 created: 2024-01-01
 ---
 `
-		require.NoError(t, os.WriteFile(".work/1_todo/001-todo-one.prd.md", []byte(item1), 0644))
-		require.NoError(t, os.WriteFile(".work/1_todo/sub/002-todo-two.prd.md", []byte(item2), 0644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-todo-one.prd.md", []byte(item1), 0o644))
+		require.NoError(t, os.WriteFile(".work/1_todo/sub/002-todo-two.prd.md", []byte(item2), 0o644))
 
 		// Abandon by id with reason
 		abandonID := exec.Command("./kira", "abandon", "001", "No longer needed")
@@ -434,7 +435,7 @@ created: 2024-01-01
 
 # Save Test
 `
-		require.NoError(t, os.WriteFile(".work/1_todo/001-save-test.prd.md", []byte(item), 0644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-save-test.prd.md", []byte(item), 0o644))
 
 		// Run save with custom message
 		saveCmd := exec.Command("./kira", "save", "Custom commit message")
@@ -492,7 +493,7 @@ kind: prd
 created: 2024-01-01
 ---
 `
-		require.NoError(t, os.WriteFile(".work/1_todo/001-bad.prd.md", []byte(invalid), 0644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-bad.prd.md", []byte(invalid), 0o644))
 
 		// Save should fail
 		saveCmd := exec.Command("./kira", "save", "attempt")

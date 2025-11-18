@@ -130,7 +130,7 @@ help:
 # Demo initialization
 demo:
 	./kira init demo-workspace
-	cd demo-workspace && ../kira new prd "Demo Feature" todo "This is a demo feature" --ignore-input
+	cd demo-workspace && ../kira new prd "Demo Feature" todo "This is a demo feature"
 	cd demo-workspace && ../kira move 001 doing
 	cd demo-workspace && ../kira save "Initial demo setup"
 
