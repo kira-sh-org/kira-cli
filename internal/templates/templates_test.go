@@ -69,9 +69,9 @@ title: <!--input-string:title:"Feature title"-->
 
 		tmpFile, err := os.CreateTemp("", "template_*.md")
 		require.NoError(t, err)
-		defer os.Remove(tmpFile.Name())
+		defer func() { _ = os.Remove(tmpFile.Name()) }()
 
-		os.WriteFile(tmpFile.Name(), []byte(templateContent), 0o644)
+		require.NoError(t, os.WriteFile(tmpFile.Name(), []byte(templateContent), 0o644))
 
 		inputs := map[string]string{
 			"id":      "001",

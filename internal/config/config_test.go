@@ -11,8 +11,8 @@ import (
 func TestLoadConfig(t *testing.T) {
 	t.Run("loads default config when no file exists", func(t *testing.T) {
 		// Remove any existing config files
-		os.Remove("kira.yml")
-		os.Remove(".work/kira.yml")
+		_ = os.Remove("kira.yml")
+		_ = os.Remove(".work/kira.yml")
 
 		config, err := LoadConfig()
 		require.NoError(t, err)
@@ -30,8 +30,8 @@ status_folders:
   todo: "custom_todo"
 `
 
-		os.WriteFile("kira.yml", []byte(testConfig), 0o644)
-		defer os.Remove("kira.yml")
+		require.NoError(t, os.WriteFile("kira.yml", []byte(testConfig), 0o644))
+		defer func() { _ = os.Remove("kira.yml") }()
 
 		config, err := LoadConfig()
 		require.NoError(t, err)
@@ -43,7 +43,7 @@ status_folders:
 
 func TestSaveConfig(t *testing.T) {
 	t.Run("saves config to file", func(t *testing.T) {
-		defer os.Remove("kira.yml")
+		defer func() { _ = os.Remove("kira.yml") }()
 
 		config := &Config{
 			Version: "1.0",

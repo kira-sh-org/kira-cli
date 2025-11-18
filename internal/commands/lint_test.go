@@ -13,11 +13,11 @@ import (
 func TestLintWorkItems(t *testing.T) {
 	t.Run("reports no issues for valid work items", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create a valid work item
 		workItemContent := `---
@@ -33,7 +33,7 @@ created: 2024-01-01
 ## Context
 This is a test feature.
 `
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		cfg := &config.DefaultConfig
 		err := lintWorkItems(cfg)
@@ -42,11 +42,11 @@ This is a test feature.
 
 	t.Run("reports validation errors", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create an invalid work item (invalid status)
 		workItemContent := `---
@@ -59,7 +59,7 @@ created: 2024-01-01
 
 # Test Feature
 `
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		cfg := &config.DefaultConfig
 		err := lintWorkItems(cfg)

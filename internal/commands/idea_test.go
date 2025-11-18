@@ -13,17 +13,17 @@ import (
 func TestAddIdea(t *testing.T) {
 	t.Run("adds idea to IDEAS.md", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory and IDEAS.md
-		os.MkdirAll(".work", 0o755)
+		require.NoError(t, os.MkdirAll(".work", 0o755))
 		ideasContent := `# Ideas
 
 ## Ideas
 
 `
-		os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644))
 
 		// Add an idea
 		err := addIdea("Test idea for testing")
@@ -39,17 +39,17 @@ func TestAddIdea(t *testing.T) {
 
 	t.Run("adds timestamp to idea", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory and IDEAS.md
-		os.MkdirAll(".work", 0o755)
+		require.NoError(t, os.MkdirAll(".work", 0o755))
 		ideasContent := `# Ideas
 
 ## Ideas
 
 `
-		os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/IDEAS.md", []byte(ideasContent), 0o644))
 
 		// Add an idea
 		beforeTime := time.Now()

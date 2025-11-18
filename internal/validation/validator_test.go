@@ -14,11 +14,11 @@ func TestValidateWorkItems(t *testing.T) {
 	t.Run("validates work items successfully", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create a valid work item
 		workItemContent := `---
@@ -35,7 +35,7 @@ created: 2024-01-01
 This is a test feature.
 `
 
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		cfg := &config.DefaultConfig
 		result, err := ValidateWorkItems(cfg)
@@ -47,11 +47,11 @@ This is a test feature.
 	t.Run("detects missing required fields", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Create .work directory structure
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create an invalid work item (missing title in front matter)
 		workItemContent := `---
@@ -64,7 +64,7 @@ created: 2024-01-01
 # Test Feature
 `
 
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		cfg := &config.DefaultConfig
 		result, err := ValidateWorkItems(cfg)
@@ -79,10 +79,10 @@ func TestGetNextID(t *testing.T) {
 	t.Run("generates first ID when no work items exist", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
-		os.MkdirAll(".work", 0o755)
+		require.NoError(t, os.MkdirAll(".work", 0o755))
 
 		id, err := GetNextID()
 		require.NoError(t, err)
@@ -92,10 +92,10 @@ func TestGetNextID(t *testing.T) {
 	t.Run("generates next sequential ID", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create a work item with ID 001
 		workItemContent := `---
@@ -109,7 +109,7 @@ created: 2024-01-01
 # Test Feature
 `
 
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		id, err := GetNextID()
 		require.NoError(t, err)
@@ -121,10 +121,10 @@ func TestFixDuplicateIDs(t *testing.T) {
 	t.Run("fixes duplicate IDs", func(t *testing.T) {
 		// Create a temporary workspace
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
-		os.MkdirAll(".work/1_todo", 0o755)
+		require.NoError(t, os.MkdirAll(".work/1_todo", 0o755))
 
 		// Create two work items with the same ID
 		workItemContent1 := `---
@@ -149,8 +149,8 @@ created: 2024-01-02
 # Second Feature
 `
 
-		os.WriteFile(".work/1_todo/001-first-feature.prd.md", []byte(workItemContent1), 0o644)
-		os.WriteFile(".work/1_todo/001-second-feature.prd.md", []byte(workItemContent2), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-first-feature.prd.md", []byte(workItemContent1), 0o644))
+		require.NoError(t, os.WriteFile(".work/1_todo/001-second-feature.prd.md", []byte(workItemContent2), 0o644))
 
 		result, err := FixDuplicateIDs()
 		require.NoError(t, err)

@@ -15,8 +15,8 @@ import (
 func TestCLIIntegration(t *testing.T) {
 	t.Run("full workflow test", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -26,7 +26,7 @@ func TestCLIIntegration(t *testing.T) {
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Test kira init
 		initCmd := exec.Command("./kira", "init")
@@ -85,8 +85,8 @@ func TestCLIIntegration(t *testing.T) {
 
 	t.Run("default status on new without status argument", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -96,7 +96,7 @@ func TestCLIIntegration(t *testing.T) {
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -116,8 +116,8 @@ func TestCLIIntegration(t *testing.T) {
 
 	t.Run("init handles existing .work with --fill-missing and --force", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -127,7 +127,7 @@ func TestCLIIntegration(t *testing.T) {
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -156,8 +156,8 @@ func TestCLIIntegration(t *testing.T) {
 
 	t.Run("work item creation and management", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -167,7 +167,7 @@ func TestCLIIntegration(t *testing.T) {
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -206,7 +206,7 @@ Use JWT tokens for authentication.
 ## Release Notes
 Added user authentication system.
 `
-		os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644)
+		require.NoError(t, os.WriteFile(".work/1_todo/001-test-feature.prd.md", []byte(workItemContent), 0o644))
 
 		// Test kira lint
 		lintCmd := exec.Command("./kira", "lint")
@@ -234,8 +234,8 @@ Added user authentication system.
 
 	t.Run("template system test", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary for testing using the repo root as working directory
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -245,7 +245,7 @@ Added user authentication system.
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -278,8 +278,8 @@ Added user authentication system.
 
 	t.Run("release command generates notes and archives done items", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -289,7 +289,7 @@ Added user authentication system.
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -335,8 +335,8 @@ This is a release note entry.
 
 	t.Run("abandon command handles id, reason, status path and subfolder", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build the kira binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -346,7 +346,7 @@ This is a release note entry.
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Initialize workspace
 		initCmd := exec.Command("./kira", "init")
@@ -399,8 +399,8 @@ created: 2024-01-01
 
 	t.Run("save command commits and updates timestamps in git repo", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -410,7 +410,7 @@ created: 2024-01-01
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// git init
 		require.NoError(t, exec.Command("git", "init").Run())
@@ -466,8 +466,8 @@ created: 2024-01-01
 
 	t.Run("save fails on validation errors", func(t *testing.T) {
 		tmpDir := t.TempDir()
-		os.Chdir(tmpDir)
-		defer os.Chdir("/")
+		require.NoError(t, os.Chdir(tmpDir))
+		defer func() { _ = os.Chdir("/") }()
 
 		// Build binary
 		_, thisFile, _, _ := runtime.Caller(0)
@@ -477,7 +477,7 @@ created: 2024-01-01
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
-		defer os.Remove("kira")
+		defer func() { _ = os.Remove("kira") }()
 
 		// Init workspace (no git init to force no commit path)
 		initCmd := exec.Command("./kira", "init")
