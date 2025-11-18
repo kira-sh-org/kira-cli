@@ -22,7 +22,7 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -92,7 +92,7 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -123,7 +123,7 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -163,7 +163,7 @@ func TestCLIIntegration(t *testing.T) {
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -241,7 +241,7 @@ Added user authentication system.
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -285,7 +285,7 @@ Added user authentication system.
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -342,7 +342,7 @@ This is a release note entry.
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -406,7 +406,7 @@ created: 2024-01-01
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
@@ -473,7 +473,7 @@ created: 2024-01-01
 		_, thisFile, _, _ := runtime.Caller(0)
 		repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 		outPath := filepath.Join(tmpDir, "kira")
-		buildCmd := exec.Command("go", "build", "-o", outPath, "./cmd/kira")
+		buildCmd := exec.Command("go", "build", "-o", outPath, "kira/cmd/kira")
 		buildCmd.Dir = repoRoot
 		output, err := buildCmd.CombinedOutput()
 		require.NoError(t, err, "build failed: %s", string(output))
