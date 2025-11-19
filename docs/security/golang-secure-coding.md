@@ -1,6 +1,6 @@
 # Go Secure Coding Practices
 
-This document outlines security patterns used in the kira-cli codebase. All file operations and command executions must follow these patterns to prevent security vulnerabilities.
+This document outlines security patterns used in the kira codebase. All file operations and command executions must follow these patterns to prevent security vulnerabilities.
 
 ## File Path Validation
 
@@ -239,4 +239,6 @@ Never use `#nosec` to bypass security checks without proper validation.
 - **Template validation**: See `internal/templates/templates.go` - `validateTemplatePath()`
 - **Command sanitization**: See `internal/commands/save.go` - `sanitizeCommitMessage()`
 - **Test path validation**: See `internal/commands/integration_test.go` - `validateTestPath()`
+
+
 
