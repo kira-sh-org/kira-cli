@@ -1,4 +1,6 @@
 # GoReleaser configuration for kira CLI
+version: 2
+
 project_name: kira
 
 builds:
@@ -18,7 +20,7 @@ builds:
       - -X 'kira/internal/commands.Version={{.Tag}}'
       - -X 'kira/internal/commands.Commit={{.ShortCommit}}'
       - -X 'kira/internal/commands.BuildDate={{.Date}}'
-      - -X 'kira/internal/commands.Dirty={{ if .Dirty }}dirty{{ else }}clean{{ end }}'
+      - -X 'kira/internal/commands.Dirty=clean'
     env:
       - CGO_ENABLED=0
 

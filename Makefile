@@ -87,10 +87,11 @@ build-all:
 
 # Test release locally using GoReleaser (does not create GitHub release)
 release-snapshot:
-	@if ! command -v goreleaser >/dev/null 2>&1; then \
-		echo "GoReleaser not found. Install it with: go install github.com/goreleaser/goreleaser@latest"; \
+	@PATH="$$(go env GOPATH)/bin:$$PATH"; \
+	if ! command -v goreleaser >/dev/null 2>&1; then \
+		echo "GoReleaser not found. Install it with: make install-tools"; \
 		exit 1; \
-	fi
+	fi; \
 	goreleaser release --snapshot --clean
 
 # Install required developer tools
@@ -121,7 +122,21 @@ install-tools:
 	  if command -v goreleaser >/dev/null 2>&1; then \
 	    echo "GoReleaser already installed, skipping"; \
 	  else \
-	    go install github.com/goreleaser/goreleaser@latest || echo "Failed to install GoReleaser"; \
+	    echo "Downloading GoReleaser binary..."; \
+	    GORELEASER_VERSION=$$(curl -s https://api.github.com/repos/goreleaser/goreleaser/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' || echo "latest"); \
+	    ARCH=$$(uname -m); \
+	    OS=$$(uname -s | tr '[:upper:]' '[:lower:]'); \
+	    if [ "$$ARCH" = "arm64" ] || [ "$$ARCH" = "aarch64" ]; then \
+	      ARCH="arm64"; \
+	    else \
+	      ARCH="x86_64"; \
+	    fi; \
+	    if [ "$$OS" = "darwin" ]; then \
+	      OS="Darwin"; \
+	    elif [ "$$OS" = "linux" ]; then \
+	      OS="Linux"; \
+	    fi; \
+	    curl -sSfL "https://github.com/goreleaser/goreleaser/releases/latest/download/goreleaser_$${OS}_$${ARCH}.tar.gz" | tar -xz -C /tmp && mv /tmp/goreleaser "$$BIN_DIR/" && chmod +x "$$BIN_DIR/goreleaser" || echo "Failed to install GoReleaser"; \
 	  fi; \
 	  echo ""; \
 	  echo "Installing govulncheck..."; \
