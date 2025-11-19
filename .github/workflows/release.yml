@@ -29,5 +29,7 @@ jobs:
           version: latest
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT for cross-repository access (homebrew-kira and scoop-bucket)
+          # Create GH_PAT secret in repository settings with 'repo' scope
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 

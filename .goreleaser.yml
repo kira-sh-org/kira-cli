@@ -48,11 +48,45 @@ changelog:
 
 release:
   github:
-    owner: kira-os
-    name: kira-cli
+    owner: taskforce-labs
+    name: kira
   mode: replace
   header: |
     ## What's Changed
   footer: |
-    **Full Changelog**: https://github.com/kira-os/kira-cli/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/taskforce-labs/kira/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+homebrew_casks:
+  - name: kira
+    description: "Git-based, plaintext productivity tool designed with both clankers (LLMs) and meatbags (people) in mind"
+    homepage: "https://github.com/taskforce-labs/kira"
+    license: "MIT"
+    binaries:
+      - kira
+    repository:
+      owner: taskforce-labs
+      name: homebrew-kira
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/kira"]
+          end
+
+scoops:
+  - name: kira
+    description: "Git-based, plaintext productivity tool designed with both clankers (LLMs) and meatbags (people) in mind"
+    homepage: "https://github.com/taskforce-labs/kira"
+    license: "MIT"
+    repository:
+      owner: taskforce-labs
+      name: scoop-bucket
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
+    persist:
+      - data
 

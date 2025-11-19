@@ -10,34 +10,42 @@ Unlike Jira and other tools that are overly complicated and expensive, Kira keep
 
 ## Installation
 
-### Download Pre-built Binaries (Recommended)
+### Package Managers (Recommended)
 
-Pre-built binaries are available for Linux, macOS, and Windows on the [GitHub Releases](https://github.com/kira-os/kira-cli/releases) page.
+**macOS (Homebrew):**
+```bash
+brew tap taskforce-labs/kira
+brew install kira
+```
+
+**Windows (Scoop):**
+```powershell
+scoop bucket add taskforce-labs https://github.com/taskforce-labs/scoop-bucket.git
+scoop install kira
+```
+
+### Download Pre-built Binaries
+
+Pre-built binaries are available for Linux, macOS, and Windows on the [GitHub Releases](https://github.com/taskforce-labs/kira/releases) page.
 
 **Linux/macOS:**
 ```bash
 # Download and extract the appropriate archive for your platform
 # Example for Linux amd64:
-wget https://github.com/kira-os/kira-cli/releases/latest/download/kira_linux_amd64.tar.gz
+wget https://github.com/taskforce-labs/kira/releases/latest/download/kira_linux_amd64.tar.gz
 tar -xzf kira_linux_amd64.tar.gz
 sudo mv kira /usr/local/bin/
 
 # Or for macOS arm64:
-wget https://github.com/kira-os/kira-cli/releases/latest/download/kira_darwin_arm64.tar.gz
+wget https://github.com/taskforce-labs/kira/releases/latest/download/kira_darwin_arm64.tar.gz
 tar -xzf kira_darwin_arm64.tar.gz
 sudo mv kira /usr/local/bin/
-```
-
-**Windows:**
-```powershell
-# Download and extract the zip file
-# Extract kira.exe and add it to your PATH
 ```
 
 ### Using Go Install
 
 ```bash
-go install github.com/kira-os/kira-cli/cmd/kira@latest
+go install github.com/taskforce-labs/kira/cmd/kira@latest
 ```
 
 ### Build from Source (Contributors)
