@@ -1,7 +1,7 @@
 ---
 id: 001
 title: Kira MVP
-status: review
+status: done
 kind: prd
 assigned: wkallan1984@gmail.com
 estimate: 1 day
