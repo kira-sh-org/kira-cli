@@ -23,3 +23,14 @@ This file is for capturing quick ideas and thoughts that don't fit into formal w
 - [2025-10-11] Kira should be able to generate a list of all the work items in a given status.
 
 - [2025-10-11] Kira should be able to import data from Jira.
+
+- [2025-11-29] SQL lite DB to store work items and metadata for faster access of CLI commands.
+
+- [2025-11-29] Excel to extract reports for a query.
+
+- [2025-11-29] Command to split a work item into smaller work items.
+
+- [2025-11-29] Command to bulk update work items that match a pattern.
+
+- [2025-11-29] A game where you get to shoot kaju with an army of robots from the cli
+
